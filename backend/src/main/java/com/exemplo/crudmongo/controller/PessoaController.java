@@ -4,33 +4,89 @@ import com.exemplo.crudmongo.Model.Pessoa;
 import com.exemplo.crudmongo.service.PessoaService;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/pessoas")
-@CrossOrigin(origins = "*")
+/**
+ * Controlador REST para gerenciar operações relacionadas à entidade Pessoa.
+ */
+@RestController // Indica que esta classe é um controlador REST
+@RequestMapping("/pessoas") // Define o endpoint base para as requisições
+@CrossOrigin(origins = "*") // Permite requisições de qualquer origem (CORS)
 public class PessoaController {
-    private final PessoaService service;
 
+    @Autowired // Injeção automática do serviço
+    private final PessoaService service; // Serviço responsável pela lógica de negócio
+
+    /**
+     * Injeta o serviço PessoaService via construtor.
+     */
     public PessoaController(PessoaService service) {
         this.service = service;
     }
 
+    /**
+     * Retorna a lista de todas as pessoas cadastradas.
+     * Método acessível via GET em /pessoas
+     */
     @GetMapping
     public List<Pessoa> listar() {
         return service.listarTodas();
     }
 
+    // Buscar pessoas por nome (ex: /pessoas/nome?valor=joao)
+    @GetMapping("/nome")
+    public List<Pessoa> buscarPorNome(@RequestParam("valor") String nome) {
+        return service.buscarPorNome(nome);
+    }
+
+    // Buscar pessoas por idade (ex: /pessoas/idade?valor=30)
+    @GetMapping("/idade")
+    public List<Pessoa> buscarPorIdade(@RequestParam("valor") Integer idade) {
+        return service.buscarPorIdade(idade);
+    }
+
+    // Paginação (ex: /pessoas/pagina?numero=0&tamanho=10)
+    @GetMapping("/pagina")
+    public Page<Pessoa> listarPaginado(@RequestParam(defaultValue = "0") int numero,
+                                       @RequestParam(defaultValue = "10") int tamanho) {
+        return service.listarPaginado(numero, tamanho);
+    }
+    
+
+
+
+    /**
+     * Cria uma nova pessoa.
+     * Método acessível via POST em /pessoas
+     * @param pessoa Objeto Pessoa recebido no corpo da requisição
+     * @return Pessoa criada
+     */
     @PostMapping
     public Pessoa criar(@RequestBody Pessoa pessoa) {
         return service.salvar(pessoa);
     }
 
+    /**
+     * Atualiza uma pessoa existente pelo ID.
+     * Método acessível via PUT em /pessoas/{id}
+     * @param id Identificador da pessoa a ser atualizada
+     * @param pessoa Dados atualizados da pessoa
+     * @return Pessoa atualizada
+     */
     @PutMapping("/{id}")
-    public Pessoa atualizar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
+    public Pessoa atualizar(@PathVariable Long id, 
+    @RequestBody Pessoa pessoa) {
         return service.atualizar(id, pessoa);
     }
 
+    /**
+     * Exclui uma pessoa pelo ID.
+     * Método acessível via DELETE em /pessoas/{id}
+     * @param id Identificador da pessoa a ser excluída
+     */
     @DeleteMapping("/{id}")
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
