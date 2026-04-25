@@ -2,39 +2,32 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Disciplina;
 import com.exemplo.crudmongo.service.DisciplinaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/disciplina")
-@CrossOrigin(origins = "*")
-
-public class DisciplinaController{
-    private final DisciplinaService service;
-
-    public DisciplinaController(DisciplinaService service) {
-        this.service = service;
-    }
+@RequestMapping("/disciplinas")
+public class DisciplinaController {
+    @Autowired
+    private DisciplinaService service;
 
     @GetMapping
-    public List<Disciplina> listar() {
-        return service.listarTodas();
-    }
+    public List<Disciplina> getAll() { return service.findAll(); }
+
+    @GetMapping("/{id}")
+    public Optional<Disciplina> getById(@PathVariable Long id) { return service.findById(id); }
 
     @PostMapping
-    public Disciplina criar(@RequestBody Disciplina disciplina) {
-        return service.salvar(disciplina);
-    }
+    public Disciplina create(@RequestBody Disciplina disciplina) { return service.save(disciplina); }
 
     @PutMapping("/{id}")
-    public Disciplina atualizar(@PathVariable Long id,
-    @RequestBody Disciplina disciplina) {
-        return service.atualizar(id, disciplina);
+    public Disciplina update(@PathVariable Long id, @RequestBody Disciplina disciplina) {
+        disciplina.setId(id);
+        return service.save(disciplina);
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
-    }
+    public void delete(@PathVariable Long id) { service.deleteById(id); }
 }

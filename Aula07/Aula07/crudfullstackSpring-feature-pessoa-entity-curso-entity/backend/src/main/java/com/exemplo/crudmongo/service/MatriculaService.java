@@ -1,42 +1,21 @@
 package com.exemplo.crudmongo.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.exemplo.crudmongo.Model.Matricula;
 import com.exemplo.crudmongo.repository.MatriculaRepository;
 
-
 @Service
 public class MatriculaService {
-    private final MatriculaRepository repository;
+    @Autowired
+    private MatriculaRepository repository;
 
-    public MatriculaService(MatriculaRepository repository) {
-        this.repository = repository;
-    }
-
-    public List<Matricula> listarTodas() {
-        return repository.findAll();
-    }
-
-    public Matricula salvar(Matricula matricula) {
-        return repository.save(matricula);
-    }
-
-    public Matricula atualizar(@PathVariable Long id, Matricula novaMatricula) {
-        return repository.findById(id).map(m -> {
-            m.setId(id);
-            m.setPessoa(novaMatricula.getPessoa());
-            m.setCurso(novaMatricula.getCurso());
-            m.setData(novaMatricula.getData());
-            m.setAtivo(novaMatricula.isAtivo());
-            return repository.save(m);
-        }).orElseThrow(() -> new RuntimeException("Matrícula não encontrada"));
-    }
-
-    public void excluir(Long id) {
-        repository.deleteById(id);
-    }
+    public List<Matricula> findAll() { return repository.findAll(); }
+    public Optional<Matricula> findById(Long id) { return repository.findById(id); }
+    public Matricula save(Matricula matricula) { return repository.save(matricula); }
+    public void deleteById(Long id) { repository.deleteById(id); }
 }

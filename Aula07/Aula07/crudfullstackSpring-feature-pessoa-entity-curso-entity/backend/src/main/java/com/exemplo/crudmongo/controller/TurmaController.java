@@ -2,40 +2,32 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Turma;
 import com.exemplo.crudmongo.service.TurmaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/turma")
-@CrossOrigin(origins = "*")
-
+@RequestMapping("/turmas")
 public class TurmaController {
-    private final TurmaService service;
-
-
-    public TurmaController(TurmaService service) {
-        this.service = service;
-    }
+    @Autowired
+    private TurmaService service;
 
     @GetMapping
-    public List<Turma> listar() {
-        return service.listarTodas();
-    }
+    public List<Turma> getAll() { return service.findAll(); }
+
+    @GetMapping("/{id}")
+    public Optional<Turma> getById(@PathVariable Long id) { return service.findById(id); }
 
     @PostMapping
-    public Turma criar(@RequestBody Turma turma) {
-        return service.salvar(turma);
-    }
+    public Turma create(@RequestBody Turma turma) { return service.save(turma); }
 
     @PutMapping("/{id}")
-    public Turma atualizar(@PathVariable Long id,
-    @RequestBody Turma turma) {
-        return service.atualizar(id, turma);
+    public Turma update(@PathVariable Long id, @RequestBody Turma turma) {
+        turma.setId(id);
+        return service.save(turma);
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
-    }
+    public void delete(@PathVariable Long id) { service.deleteById(id); }
 }

@@ -1,41 +1,42 @@
 package com.exemplo.crudmongo.controller;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.exemplo.crudmongo.Model.Matricula;
 import com.exemplo.crudmongo.service.MatriculaService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/matricula")
-@CrossOrigin(origins = "*")
-
+@RequestMapping("/matriculas")
 public class MatriculaController {
-    private final MatriculaService service;
-
-
-    public MatriculaController(MatriculaService service) {
-        this.service = service;
-    }
+    @Autowired
+    private MatriculaService service;
 
     @GetMapping
-    public List<Matricula> listar() {
-        return service.listarTodas();
-    }
+    public List<Matricula> getAll() { return service.findAll(); }
+
+    @GetMapping("/{id}")
+    public Optional<Matricula> getById(@PathVariable Long id) { return service.findById(id); }
 
     @PostMapping
-    public Matricula criar(@RequestBody Matricula matricula) {
-        return service.salvar(matricula);
-    }
+    public Matricula create(@RequestBody Matricula matricula) { return service.save(matricula); }
 
     @PutMapping("/{id}")
-    public Matricula atualizar(@PathVariable Long id,
-    @RequestBody Matricula matricula) {
-        return service.atualizar(id, matricula);
+    public Matricula update(@PathVariable Long id, @RequestBody Matricula matricula) {
+        matricula.setId(id);
+        return service.save(matricula);
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
-    }
+    public void delete(@PathVariable Long id) { service.deleteById(id); }
 }

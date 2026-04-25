@@ -13,14 +13,23 @@ public class Avaliacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long pessoa;
-    private Long disciplina;
+    private Long pessoaId;
+    private Long disciplinaId;
 
     private double nota;
     private String data;
     private boolean ativo;
 
     public Avaliacao() {
+    }
+
+    public Avaliacao(Long id, Long pessoaId, Long disciplinaId, double nota, String data, boolean ativo) {
+        this.id = id;
+        this.pessoaId = pessoaId;
+        this.disciplinaId = disciplinaId;
+        this.nota = nota;
+        this.data = data;
+        this.ativo = ativo;
     }
 
     public Long getId() {
@@ -31,20 +40,20 @@ public class Avaliacao {
         this.id = id;
     }
 
-    public Long getPessoa() {
-        return pessoa;
+    public Long getPessoaId() {
+        return pessoaId;
     }
 
-    public void setPessoa(Long pessoa) {
-        this.pessoa = pessoa;
+    public void setPessoaId(Long pessoaId) {
+        this.pessoaId = pessoaId;
     }
 
-    public Long getDisciplina() {
-        return disciplina;
+    public Long getDisciplinaId() {
+        return disciplinaId;
     }
 
-    public void setDisciplina(Long disciplina) {
-        this.disciplina = disciplina;
+    public void setDisciplinaId(Long disciplinaId) {
+        this.disciplinaId = disciplinaId;
     }
 
     public double getNota() {

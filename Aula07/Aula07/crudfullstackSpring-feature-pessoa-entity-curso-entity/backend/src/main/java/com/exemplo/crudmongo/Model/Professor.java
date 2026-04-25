@@ -47,6 +47,13 @@ public class Professor {
     }
     // Esse é o construtor (serve para criar um novo professor vazio)
 
+    public Professor(Long id, String nome, String area, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.area = area;
+        this.ativo = ativo;
+    }
+
     public Long getId() {
         return id;
     }

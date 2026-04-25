@@ -13,13 +13,21 @@ public class Matricula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long pessoa;
-    private Long curso;
+    private Long pessoaId;
+    private Long cursoId;
 
-    private String data;
+    private String dataMatricula;
     private boolean ativo;
 
     public Matricula() {
+    }
+
+    public Matricula(Long id, Long pessoaId, Long cursoId, String dataMatricula, boolean ativo) {
+        this.id = id;
+        this.pessoaId = pessoaId;
+        this.cursoId = cursoId;
+        this.dataMatricula = dataMatricula;
+        this.ativo = ativo;
     }
 
     public Long getId() {
@@ -31,27 +39,27 @@ public class Matricula {
     }
 
     public Long getPessoa() {
-        return pessoa;
+        return pessoaId;
     }
 
-    public void setPessoa(Long pessoa) {
-        this.pessoa = pessoa;
+    public void setPessoaId(Long pessoaId) {
+        this.pessoaId = pessoaId;
     }
 
-    public Long getCurso() {
-        return curso;
+    public Long getCursoId() {
+        return cursoId;
     }
 
-    public void setCurso(Long curso) {
-        this.curso = curso;
+    public void setCursoId(Long cursoId) {
+        this.cursoId = cursoId;
     }
 
-    public String getData() {
-        return data;
+    public String getDataMatricula() {
+        return dataMatricula;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setDataMatricula(String dataMatricula) {
+        this.dataMatricula = dataMatricula;
     }
 
     public boolean isAtivo() {

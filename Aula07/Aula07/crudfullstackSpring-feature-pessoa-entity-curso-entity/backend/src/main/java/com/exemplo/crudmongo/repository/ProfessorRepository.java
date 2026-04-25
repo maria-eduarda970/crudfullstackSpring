@@ -5,13 +5,7 @@ import com.exemplo.crudmongo.Model.Professor;
 // Aqui estamos pegando a classe Professor (a ficha do professor)
 
 import org.springframework.data.jpa.repository.JpaRepository;
-// Importa algo pronto que já sabe salvar, buscar, editar e deletar no banco
-
-import org.springframework.stereotype.Repository;
-// Diz que essa classe é responsável por conversar com o banco de dados
-
-@Repository
-// Marca que isso aqui é um "repositório" (quem cuida do banco)
+// Importa algo pronto que já sabe salvar, buscar, editar e deletar no banco de dados
 
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 // Aqui criamos o repositório do Professor

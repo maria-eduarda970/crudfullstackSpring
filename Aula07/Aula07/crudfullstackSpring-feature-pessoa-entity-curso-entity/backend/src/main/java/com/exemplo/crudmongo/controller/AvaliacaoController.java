@@ -2,40 +2,32 @@ package com.exemplo.crudmongo.controller;
 
 import com.exemplo.crudmongo.Model.Avaliacao;
 import com.exemplo.crudmongo.service.AvaliacaoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/avaliacao")
-@CrossOrigin(origins = "*")
-
+@RequestMapping("/avaliacoes")
 public class AvaliacaoController {
-    private final AvaliacaoService service;
-
-
-    public AvaliacaoController(AvaliacaoService service) {
-        this.service = service;
-    }
+    @Autowired
+    private AvaliacaoService service;
 
     @GetMapping
-    public List<Avaliacao> listar() {
-        return service.listarTodas();
-    }
+    public List<Avaliacao> getAll() { return service.findAll(); }
+
+    @GetMapping("/{id}")
+    public Optional<Avaliacao> getById(@PathVariable Long id) { return service.findById(id); }
 
     @PostMapping
-    public Avaliacao criar(@RequestBody Avaliacao avaliacao) {
-        return service.salvar(avaliacao);
-    }
+    public Avaliacao create(@RequestBody Avaliacao avaliacao) { return service.save(avaliacao); }
 
     @PutMapping("/{id}")
-    public Avaliacao atualizar(@PathVariable Long id,
-    @RequestBody Avaliacao avaliacao) {
-        return service.atualizar(id, avaliacao);
+    public Avaliacao update(@PathVariable Long id, @RequestBody Avaliacao avaliacao) {
+        avaliacao.setId(id);
+        return service.save(avaliacao);
     }
 
     @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
-    }
+    public void delete(@PathVariable Long id) { service.deleteById(id); }
 }
