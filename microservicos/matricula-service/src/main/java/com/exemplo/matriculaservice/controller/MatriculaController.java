@@ -48,11 +48,26 @@ public class MatriculaController {
         this.service = service;
     }
 
+    // =========================
+    // LISTAR TODAS AS MATRÍCULAS
+    // =========================
     @GetMapping
     public List<Matricula> listarTodas() {
         return service.listarTodas();
     }
 
+    // =========================
+    // TESTE DO CONTROLLER ADVICE
+    // (FORÇA ERRO PARA VALIDAR JSON PADRÃO)
+    // =========================
+    @GetMapping("/erro")
+    public String erroTeste() {
+        throw new RuntimeException("Erro de teste do ControllerAdvice");
+    }
+
+    // =========================
+    // BUSCAR MATRÍCULA POR ID
+    // =========================
     @GetMapping("/{id}")
     public ResponseEntity<Matricula> buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)
@@ -60,6 +75,10 @@ public class MatriculaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // =========================
+    // BUSCAR MATRÍCULA DETALHADA
+    // (CONSOME OUTROS MICROSSERVIÇOS)
+    // =========================
     @GetMapping("/{id}/detalhada")
     public ResponseEntity<MatriculaDetalhadadto> buscarDetalhada(
             @PathVariable Long id) {
@@ -69,22 +88,34 @@ public class MatriculaController {
         );
     }
 
+    // =========================
+    // LISTAR POR PESSOA
+    // =========================
     @GetMapping("/pessoa/{pessoaId}")
     public List<Matricula> listarPorPessoa(@PathVariable Long pessoaId) {
         return service.listarPorPessoa(pessoaId);
     }
 
+    // =========================
+    // LISTAR POR CURSO
+    // =========================
     @GetMapping("/curso/{cursoId}")
     public List<Matricula> listarPorCurso(@PathVariable Long cursoId) {
         return service.listarPorCurso(cursoId);
     }
 
+    // =========================
+    // CRIAR MATRÍCULA
+    // =========================
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Matricula criar(@RequestBody Matricula matricula) {
         return service.salvar(matricula);
     }
 
+    // =========================
+    // ATUALIZAR MATRÍCULA
+    // =========================
     @PutMapping("/{id}")
     public ResponseEntity<Matricula> atualizar(
             @PathVariable Long id,
@@ -99,6 +130,9 @@ public class MatriculaController {
         }
     }
 
+    // =========================
+    // DESATIVAR MATRÍCULA
+    // =========================
     @PatchMapping("/{id}/desativar")
     public ResponseEntity<Void> desativar(@PathVariable Long id) {
         try {
@@ -109,6 +143,9 @@ public class MatriculaController {
         }
     }
 
+    // =========================
+    // EXCLUIR MATRÍCULA
+    // =========================
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
