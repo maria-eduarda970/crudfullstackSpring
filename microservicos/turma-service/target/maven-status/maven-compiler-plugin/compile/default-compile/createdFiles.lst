@@ -1,0 +1,6 @@
+com\exemplo\turmaservice\config\TurmaDataLoader.class
+com\exemplo\turmaservice\model\Turma.class
+com\exemplo\turmaservice\repository\TurmaRepository.class
+com\exemplo\turmaservice\service\TurmaService.class
+com\exemplo\turmaservice\controller\TurmaController.class
+com\exemplo\turmaservice\TurmaServiceApplication.class

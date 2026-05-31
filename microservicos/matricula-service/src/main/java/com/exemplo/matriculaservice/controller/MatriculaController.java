@@ -1,28 +1,42 @@
 package com.exemplo.matriculaservice.controller;
 
-import com.exemplo.matriculaservice.model.Matricula;
-import com.exemplo.matriculaservice.service.MatriculaService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.exemplo.matriculaservice.dto.MatriculaDetalhadadto;
+import com.exemplo.matriculaservice.model.Matricula;
+import com.exemplo.matriculaservice.service.MatriculaService;
+
 /**
- * Controller REST do microservi�o de Matr�culas.
+ * Controller REST do microserviço de Matrículas.
  *
- * Base URL: http://localhost:8081/api/matriculas
+ * Base URL:
+ * http://localhost:8081/api/matriculas
  *
- * Endpoints dispon�veis:
- *   GET    /api/matriculas              ? lista todas
- *   GET    /api/matriculas/{id}         ? busca por ID
- *   GET    /api/matriculas/pessoa/{id}  ? lista por pessoa
- *   GET    /api/matriculas/curso/{id}   ? lista por curso
- *   POST   /api/matriculas              ? cria nova
- *   PUT    /api/matriculas/{id}         ? atualiza
- *   PATCH  /api/matriculas/{id}/desativar ? desativa (soft delete)
- *   DELETE /api/matriculas/{id}         ? remove permanentemente
+ * Endpoint de comunicação entre microserviços:
+ * http://localhost:8081/api/matriculas/{id}/detalhada
+ *
+ * Exemplo:
+ * http://localhost:8081/api/matriculas/1/detalhada
+ *
+ * Retorna os dados da matrícula juntamente com
+ * o nome da pessoa e o nome do curso obtidos
+ * via chamadas HTTP aos microserviços externos.
  */
+
 @RestController
 @RequestMapping("/api/matriculas")
 @CrossOrigin(origins = "*")
@@ -46,6 +60,15 @@ public class MatriculaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/detalhada")
+    public ResponseEntity<MatriculaDetalhadadto> buscarDetalhada(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                service.buscarDetalhada(id)
+        );
+    }
+
     @GetMapping("/pessoa/{pessoaId}")
     public List<Matricula> listarPorPessoa(@PathVariable Long pessoaId) {
         return service.listarPorPessoa(pessoaId);
@@ -63,10 +86,14 @@ public class MatriculaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Matricula> atualizar(@PathVariable Long id,
-                                               @RequestBody Matricula matricula) {
+    public ResponseEntity<Matricula> atualizar(
+            @PathVariable Long id,
+            @RequestBody Matricula matricula) {
+
         try {
-            return ResponseEntity.ok(service.atualizar(id, matricula));
+            return ResponseEntity.ok(
+                    service.atualizar(id, matricula)
+            );
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

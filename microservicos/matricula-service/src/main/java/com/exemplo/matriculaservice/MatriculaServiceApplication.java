@@ -5,11 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * =====================================================
- * MICROSERVIÇO: matricula-service
+ * MICROSERVIï¿½O: matricula-service
  * =====================================================
  *
- * Este é um serviço independente responsável APENAS
- * pelo gerenciamento de matrículas.
+ * Este ï¿½ um serviï¿½o independente responsï¿½vel APENAS
+ * pelo gerenciamento de matrï¿½culas.
  *
  * Para executar:
  *   mvn spring-boot:run
@@ -19,16 +19,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *   H2 Console: http://localhost:8081/h2-console
  *
  * =====================================================
- * DIFERENÇAS em relação ao monolito:
+ * DIFERENï¿½AS em relaï¿½ï¿½o ao monolito:
  * =====================================================
  *
- * MONOLITO                        | MICROSERVIÇO
+ * MONOLITO                        | MICROSERVIï¿½O
  * --------------------------------|----------------------------
- * Uma aplicação, todas entidades  | Uma aplicação por entidade
+ * Uma aplicaï¿½ï¿½o, todas entidades  | Uma aplicaï¿½ï¿½o por entidade
  * Um banco compartilhado          | Banco exclusivo (matriculadb)
  * Porta 8080                      | Porta 8081
  * Comunica internamente (chamada  | Comunica via HTTP REST
- *   de método Java)               |   com outros serviços
+ *   de mï¿½todo Java)               |   com outros serviï¿½os
  *
  * =====================================================
  */

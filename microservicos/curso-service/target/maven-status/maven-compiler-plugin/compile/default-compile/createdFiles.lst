@@ -1,0 +1,5 @@
+com\exemplo\cursoservice\repository\CursoRepository.class
+com\exemplo\cursoservice\service\CursoService.class
+com\exemplo\cursoservice\controller\CursoController.class
+com\exemplo\cursoservice\model\Curso.class
+com\exemplo\cursoservice\CursoServiceApplication.class

@@ -1,0 +1,6 @@
+com\exemplo\disciplinaservice\model\Disciplina.class
+com\exemplo\disciplinaservice\controller\DisciplinaController.class
+com\exemplo\disciplinaservice\DisciplinaServiceApplication.class
+com\exemplo\disciplinaservice\service\DisciplinaService.class
+com\exemplo\disciplinaservice\config\DisciplinaDataLoader.class
+com\exemplo\disciplinaservice\repository\DisciplinaRepository.class

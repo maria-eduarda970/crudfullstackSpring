@@ -1,0 +1,6 @@
+com\exemplo\pessoaservice\service\PessoaService.class
+com\exemplo\pessoaservice\model\Pessoa.class
+com\exemplo\pessoaservice\config\PessoaDataLoader.class
+com\exemplo\pessoaservice\PessoaServiceApplication.class
+com\exemplo\pessoaservice\controller\PessoaController.class
+com\exemplo\pessoaservice\repository\PessoaRepository.class
