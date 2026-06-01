@@ -1,87 +1,45 @@
 package com.exemplo.pessoaservice.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
+import com.exemplo.pessoaservice.client.Cursoclient;
+import com.exemplo.pessoaservice.dto.PessoaDetalhadadto;
 import com.exemplo.pessoaservice.model.Pessoa;
 import com.exemplo.pessoaservice.repository.PessoaRepository;
 
-/**
- * Camada de negócio do microserviço de Pessoas.
- * Toda a lógica de negócio fica aqui — o controller só delega.
- */
 @Service
 public class PessoaService {
 
     private final PessoaRepository repository;
+    private final Cursoclient cursoclient;
 
-    public PessoaService(PessoaRepository repository) {
+    public PessoaService(PessoaRepository repository,
+    Cursoclient cursoclient) {
         this.repository = repository;
+        this.cursoclient = cursoclient;
     }
 
-    /** Lista todas as pessoas */
-    public List<Pessoa> listarTodas() {
-        return repository.findAll();
-    }
+    public PessoaDetalhadadto buscarDetalhada(Long id) {
 
-    /** Busca uma pessoa pelo ID */
-    public Optional<Pessoa> buscarPorId(Long id) {
-        return repository.findById(id);
-    }
+        Pessoa p = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
 
-    /** Lista pessoas por nome */
-    public List<Pessoa> listarPorNome(String nome) {
-        return repository.findByNome(nome);
-    }
+        PessoaDetalhadadto dto = new PessoaDetalhadadto();
 
-    /** Lista pessoas por idade */
-    public List<Pessoa> listarPorIdade(int idade) {
-        return repository.findByIdade(idade);
-    }
+        dto.setId(p.getId());
+        dto.setNome(p.getNome());
+        dto.setIdade(p.getIdade());
+        dto.setEmail(p.getEmail());
+        dto.setTelefone(p.getTelefone());
+        dto.setAtivo(p.isAtivo());
 
-    /** Lista pessoas por email */
-    public List<Pessoa> listarPorEmail(String email) {
-        return repository.findByEmail(email);
-    }
+        dto.setCursoId(p.getCursoId());
 
-    /** Lista pessoas por telefone */
-    public List<Pessoa> listarPorTelefone(String telefone) {
-        return repository.findByTelefone(telefone);
-    }
+        // NÍVEL 2: chamada entre serviços
+        String nomeCurso = cursoclient.buscarNomeCurso(p.getCursoId());
 
-    /** Cria uma nova pessoa */
-    public Pessoa salvar(Pessoa pessoa) {
-        return repository.save(pessoa);
-    }
+        dto.setNomeCurso(nomeCurso);
 
-    /** Atualiza uma pessoa existente */
-    public Pessoa atualizar(Long id, Pessoa dados) {
-        Pessoa existente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada: " + id));
-
-        existente.setNome(dados.getNome());
-        existente.setIdade(dados.getIdade());
-        existente.setEmail(dados.getEmail());
-        existente.setTelefone(dados.getTelefone());
-        existente.setAtivo(dados.isAtivo());
-
-        return repository.save(existente);
-    }
-
-    /** Desativa uma pessoa (soft delete) */
-    public void desativar(Long id) {
-        Pessoa existente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada: " + id));
-
-        existente.setAtivo(false);
-
-        repository.save(existente);
-    }
-
-    /** Remove permanentemente uma pessoa */
-    public void excluir(Long id) {
-        repository.deleteById(id);
+        return dto;
     }
 }

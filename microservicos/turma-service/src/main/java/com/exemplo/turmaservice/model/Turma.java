@@ -6,9 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * Entidade Turma — pertence exclusivamente a este microserviço.
- */
 @Entity
 @Table(name = "turma")
 public class Turma {
@@ -21,15 +18,28 @@ public class Turma {
     private int ano;
     private boolean ativo;
 
+    // 🔗 ligação com professor-service (NÍVEL 2)
+    private Long professorId;
+
+    // 🔥 campo enriquecido (NÍVEL 2)
+    private String nomeProfessor;
+
     public Turma() {
     }
 
-    public Turma(Long id, String nome, int ano, boolean ativo) {
+    public Turma(Long id, String nome, int ano, boolean ativo,
+                 Long professorId, String nomeProfessor) {
         this.id = id;
         this.nome = nome;
         this.ano = ano;
         this.ativo = ativo;
+        this.professorId = professorId;
+        this.nomeProfessor = nomeProfessor;
     }
+
+    // =========================================================
+    // GETTERS E SETTERS
+    // =========================================================
 
     public Long getId() {
         return id;
@@ -61,5 +71,21 @@ public class Turma {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Long getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Long professorId) {
+        this.professorId = professorId;
+    }
+
+    public String getNomeProfessor() {
+        return nomeProfessor;
+    }
+
+    public void setNomeProfessor(String nomeProfessor) {
+        this.nomeProfessor = nomeProfessor;
     }
 }

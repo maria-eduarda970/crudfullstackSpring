@@ -5,6 +5,11 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.exemplo.avaliacaoservice.client.Disciplinaclient;
+import com.exemplo.avaliacaoservice.client.Pessoaclient;
+import com.exemplo.avaliacaoservice.dto.AvaliacaoDetalhadadto;
+import com.exemplo.avaliacaoservice.dto.Disciplinadto;
+import com.exemplo.avaliacaoservice.dto.Pessoadto;
 import com.exemplo.avaliacaoservice.model.Avaliacao;
 import com.exemplo.avaliacaoservice.repository.AvaliacaoRepository;
 
@@ -16,9 +21,17 @@ import com.exemplo.avaliacaoservice.repository.AvaliacaoRepository;
 public class AvaliacaoService {
 
     private final AvaliacaoRepository repository;
+    private final Pessoaclient pessoaclient;
+    private final Disciplinaclient disciplinaclient;
 
-    public AvaliacaoService(AvaliacaoRepository repository) {
+    public AvaliacaoService(
+            AvaliacaoRepository repository,
+            Pessoaclient pessoaclient,
+            Disciplinaclient disciplinaclient) {
+
         this.repository = repository;
+        this.pessoaclient = pessoaclient;
+        this.disciplinaclient = disciplinaclient;
     }
 
     /** Lista todas as avaliações */
@@ -39,6 +52,36 @@ public class AvaliacaoService {
     /** Lista avaliações de uma disciplina */
     public List<Avaliacao> listarPorDisciplina(Long disciplinaId) {
         return repository.findByDisciplinaId(disciplinaId);
+    }
+
+    /** Busca avaliação detalhada */
+    public AvaliacaoDetalhadadto buscarDetalhada(Long id) {
+
+        Avaliacao avaliacao = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Avaliação não encontrada"));
+
+        Pessoadto pessoa =
+                pessoaclient.buscarPessoa(avaliacao.getPessoaId());
+
+        Disciplinadto disciplina =
+                disciplinaclient.buscarDisciplina(avaliacao.getDisciplinaId());
+
+        AvaliacaoDetalhadadto dto = new AvaliacaoDetalhadadto();
+
+        dto.setId(avaliacao.getId());
+
+        dto.setPessoaId(avaliacao.getPessoaId());
+        dto.setNomePessoa(pessoa.getNome());
+
+        dto.setDisciplinaId(avaliacao.getDisciplinaId());
+        dto.setNomeDisciplina(disciplina.getNome());
+
+        dto.setNota(avaliacao.getNota());
+        dto.setData(avaliacao.getData());
+
+        dto.setAtivo(avaliacao.isAtivo());
+
+        return dto;
     }
 
     /** Cria uma nova avaliação */

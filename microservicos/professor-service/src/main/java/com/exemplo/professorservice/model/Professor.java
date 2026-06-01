@@ -6,14 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * Entidade Professor ? pertence exclusivamente a este microservio.
- *
- * IMPORTANTE: em microservi�os, N�O usamos @ManyToOne com outras entidades
- * de outros servi�os. Em vez disso, guardamos apenas os IDs (pessoaId, cursoId).
- * A consulta ao nome da pessoa ou curso � feita via chamada REST ao
- * respectivo servi�o, se necess�rio.
- */
 @Entity
 @Table(name = "professor")
 public class Professor {
@@ -21,22 +13,43 @@ public class Professor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private int idade;
     private String email;
     private String area;
     private boolean ativo;
 
-    public Professor() {}
+    // 🔗 IDs de outros microserviços (NÍVEL 2)
+    private Long cursoId;
+    private Long turmaId;
 
-    public Professor(Long id, String nome, int idade, String email, String area, boolean ativo) {
+    // 🔥 Campos enriquecidos via chamada HTTP (NÍVEL 2)
+    private String nomeCurso;
+    private String nomeTurma;
+
+    public Professor() {
+    }
+
+    public Professor(Long id, String nome, int idade, String email,
+                     String area, boolean ativo,
+                     Long cursoId, Long turmaId,
+                     String nomeCurso, String nomeTurma) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
         this.email = email;
         this.area = area;
         this.ativo = ativo;
+        this.cursoId = cursoId;
+        this.turmaId = turmaId;
+        this.nomeCurso = nomeCurso;
+        this.nomeTurma = nomeTurma;
     }
+
+    // =========================================================
+    // GETTERS E SETTERS
+    // =========================================================
 
     public Long getId() {
         return id;
@@ -70,8 +83,13 @@ public class Professor {
         this.email = email;
     }
 
-    public String getArea() { return area; }
-    public void setArea(String area) { this.area = area; }
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
 
     public boolean isAtivo() {
         return ativo;
@@ -79,5 +97,37 @@ public class Professor {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Long getCursoId() {
+        return cursoId;
+    }
+
+    public void setCursoId(Long cursoId) {
+        this.cursoId = cursoId;
+    }
+
+    public Long getTurmaId() {
+        return turmaId;
+    }
+
+    public void setTurmaId(Long turmaId) {
+        this.turmaId = turmaId;
+    }
+
+    public String getNomeCurso() {
+        return nomeCurso;
+    }
+
+    public void setNomeCurso(String nomeCurso) {
+        this.nomeCurso = nomeCurso;
+    }
+
+    public String getNomeTurma() {
+        return nomeTurma;
+    }
+
+    public void setNomeTurma(String nomeTurma) {
+        this.nomeTurma = nomeTurma;
     }
 }

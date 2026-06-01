@@ -1,90 +1,86 @@
 package com.exemplo.pessoaservice.controller;
 
-import com.exemplo.pessoaservice.model.Pessoa;
-import com.exemplo.pessoaservice.service.PessoaService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
-/**
- * Controller REST do microserviço de Pessoas.
- *
- * Base URL: http://localhost:8085/api/pessoas
- *
- * Endpoints disponíveis:
- *   GET    /api/pessoas                    → lista todas
- *   GET    /api/pessoas/{id}               → busca por ID
- *   GET    /api/pessoas/nome/{nome}        → lista por nome
- *   GET    /api/pessoas/email/{email}      → lista por email
- *   POST   /api/pessoas                    → cria nova
- *   PUT    /api/pessoas/{id}               → atualiza
- *   PATCH  /api/pessoas/{id}/desativar     → desativa (soft delete)
- *   DELETE /api/pessoas/{id}               → remove permanentemente
- */
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.exemplo.pessoaservice.dto.PessoaDetalhadadto;
+import com.exemplo.pessoaservice.model.Pessoa;
+import com.exemplo.pessoaservice.repository.PessoaRepository;
+import com.exemplo.pessoaservice.service.PessoaService;
+
 @RestController
-@RequestMapping("/api/pessoas")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/pessoas") // 🔗 URL BASE: http://localhost:8085/api/pessoas
 public class PessoaController {
 
     private final PessoaService service;
+    private final PessoaRepository repository;
 
-    public PessoaController(PessoaService service) {
+    public PessoaController(PessoaService service, PessoaRepository repository) {
         this.service = service;
+        this.repository = repository;
     }
 
+    // =========================================================
+    // ✔ NÍVEL 1 - CRUD BÁSICO
+    // =========================================================
+
+    // 🔗 POST: http://localhost:8085/api/pessoas
+    @PostMapping
+    public ResponseEntity<Pessoa> criar(@RequestBody Pessoa pessoa) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(repository.save(pessoa));
+    }
+
+    // 🔗 GET: http://localhost:8085/api/pessoas
     @GetMapping
-    public List<Pessoa> listarTodas() {
-        return service.listarTodas();
+    public ResponseEntity<List<Pessoa>> listar() {
+        return ResponseEntity.ok(repository.findAll());
     }
 
+    // 🔗 GET: http://localhost:8085/api/pessoas/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Pessoa> buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(
+                repository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"))
+        );
     }
 
-    @GetMapping("/nome/{nome}")
-    public List<Pessoa> listarPorNome(@PathVariable String nome) {
-        return service.listarPorNome(nome);
-    }
-
-    @GetMapping("/email/{email}")
-    public List<Pessoa> listarPorEmail(@PathVariable String email) {
-        return service.listarPorEmail(email);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Pessoa criar(@RequestBody Pessoa pessoa) {
-        return service.salvar(pessoa);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Pessoa> atualizar(@PathVariable Long id,
-                                            @RequestBody Pessoa pessoa) {
-        try {
-            return ResponseEntity.ok(service.atualizar(id, pessoa));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PatchMapping("/{id}/desativar")
-    public ResponseEntity<Void> desativar(@PathVariable Long id) {
-        try {
-            service.desativar(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
+    // 🔗 DELETE: http://localhost:8085/api/pessoas/{id}
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // =========================================================
+    // ✔ NÍVEL 2 - MICROSERVIÇO (PESSOA + CURSO)
+    // =========================================================
+
+    /**
+     * 🔥 BUSCA DETALHADA (NÍVEL 2)
+     *
+     * Exemplo de chamada:
+     * GET http://localhost:8085/api/pessoas/1/detalhada
+     *Nível 3.1 — Handler Global de Erros
+ * Exemplo:
+ * GET http://localhost:8085/api/pessoas/999/detalhada
+     * Aqui acontece:
+     * - busca pessoa no banco
+     * - chama curso-service (8083)
+     * - monta DTO com nomeCurso
+     */
+    @GetMapping("/{id}/detalhada")
+    public ResponseEntity<PessoaDetalhadadto> buscarDetalhada(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarDetalhada(id));
     }
 }

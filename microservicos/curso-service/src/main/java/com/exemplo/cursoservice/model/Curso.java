@@ -6,6 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidade Curso — pertence exclusivamente a este microserviço.
+ *
+ * IMPORTANTE: em microserviços, NÃO usamos @ManyToOne com entidades
+ * de outros serviços. Guardamos apenas o ID de referência e buscamos
+ * os dados via chamada REST quando necessário.
+ */
 @Entity
 @Table(name = "curso")
 public class Curso {
@@ -15,23 +22,63 @@ public class Curso {
     private Long id;
 
     private String nome;
+
     private int cargaHoraria;
+
+    private Long professorId;
+
     private boolean ativo;
 
-    public Curso() {}
+    public Curso() {
+    }
 
-    public Curso(String nome, int cargaHoraria, boolean ativo) {
+    public Curso(String nome,
+    int cargaHoraria,
+    Long professorId,
+    boolean ativo) {
         this.nome = nome;
         this.cargaHoraria = cargaHoraria;
+        this.professorId = professorId;
         this.ativo = ativo;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
-    public int getCargaHoraria() { return cargaHoraria; }
-    public void setCargaHoraria(int cargaHoraria) { this.cargaHoraria = cargaHoraria; }
-    public boolean isAtivo() { return ativo; }
-    public void setAtivo(boolean ativo) { this.ativo = ativo; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getCargaHoraria() {
+        return cargaHoraria;
+    }
+
+    public void setCargaHoraria(int cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+    }
+
+    public Long getProfessorId() {
+        return professorId;
+    }
+
+    public void setProfessorId(Long professorId) {
+        this.professorId = professorId;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
 }

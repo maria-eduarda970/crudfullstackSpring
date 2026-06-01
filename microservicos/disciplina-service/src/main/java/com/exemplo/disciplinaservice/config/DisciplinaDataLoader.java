@@ -20,18 +20,22 @@ public class DisciplinaDataLoader {
 
             Disciplina d1 = new Disciplina();
             d1.setNome("Banco de Dados");
+            d1.setCursoId(1L);
             d1.setAtivo(true);
 
             Disciplina d2 = new Disciplina();
             d2.setNome("Programação Orientada a Objetos");
+            d2.setCursoId(1L);
             d2.setAtivo(true);
 
             Disciplina d3 = new Disciplina();
             d3.setNome("Redes de Computadores");
+            d3.setCursoId(2L);
             d3.setAtivo(true);
 
             Disciplina d4 = new Disciplina();
             d4.setNome("Engenharia de Software");
+            d4.setCursoId(3L);
             d4.setAtivo(false);
 
             repository.save(d1);

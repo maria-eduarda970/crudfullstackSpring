@@ -6,14 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/**
- * Entidade Pessoa ? pertence exclusivamente a este microservio.
- *
- * IMPORTANTE: em microservios, NO usamos @ManyToOne com outras entidades
- * de outros servios. Em vez disso, guardamos apenas os IDs (pessoaId, cursoId).
- * A consulta ao nome da pessoa ou curso feita via chamada REST ao
- * respectivo servio, se necessrio.
- */
 @Entity
 @Table(name = "pessoa")
 public class Pessoa {
@@ -21,12 +13,17 @@ public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private int idade;
     private String email;
     private String telefone;
     private boolean ativo;
-    
+
+    private Long cursoId;
+
+    private String nomeCurso;
+
     public Pessoa() {
     }
 
@@ -76,5 +73,21 @@ public class Pessoa {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Long getCursoId() {
+        return cursoId;
+    }
+
+    public void setCursoId(Long cursoId) {
+        this.cursoId = cursoId;
+    }
+
+    public String getNomeCurso() {
+        return nomeCurso;
+    }
+
+    public void setNomeCurso(String nomeCurso) {
+        this.nomeCurso = nomeCurso;
     }
 }

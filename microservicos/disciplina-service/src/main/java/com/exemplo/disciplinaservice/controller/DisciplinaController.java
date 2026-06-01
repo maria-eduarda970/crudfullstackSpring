@@ -16,22 +16,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.disciplinaservice.dto.DisciplinaDetalhadadto;
 import com.exemplo.disciplinaservice.model.Disciplina;
 import com.exemplo.disciplinaservice.service.DisciplinaService;
 
 /**
  * Controller REST do microserviço de Disciplinas.
  *
- * Base URL: http://localhost:8084/api/disciplinas
+ * Base URL:
+ * http://localhost:8084/api/disciplinas
  *
- * Endpoints disponíveis:
- *   GET    /api/disciplinas                 → lista todas
- *   GET    /api/disciplinas/{id}            → busca por ID
- *   GET    /api/disciplinas/nome/{nome}     → lista por nome
- *   POST   /api/disciplinas                 → cria nova
- *   PUT    /api/disciplinas/{id}            → atualiza
- *   PATCH  /api/disciplinas/{id}/desativar  → desativa (soft delete)
- *   DELETE /api/disciplinas/{id}            → remove permanentemente
+ * Endpoints CRUD:
+ * GET    /api/disciplinas
+ * GET    /api/disciplinas/{id}
+ * GET    /api/disciplinas/nome/{nome}
+ * POST   /api/disciplinas
+ * PUT    /api/disciplinas/{id}
+ * PATCH  /api/disciplinas/{id}/desativar
+ * DELETE /api/disciplinas/{id}
+ *
+ * Nível 2 — Comunicação entre microserviços
+ *
+ * Exemplo:
+ * GET http://localhost:8084/api/disciplinas/1/detalhado
+ *
+ * Nível 3.1 — Handler Global de Erros
+ * Exemplo:
+ * GET http://localhost:8084/api/disciplinas/999/detalhado
+ *
+ * Retorno:
+ * {
+ *   "status": 400,
+ *   "mensagem": "Disciplina não encontrada",
+ *   "timestamp": "2026-06-01T10:00:00"
+ * }
+ *
+ * Nível 3.2 — Fallback
+ * Se curso-service estiver indisponível:
+ *
+ * GET http://localhost:8084/api/disciplinas/1/detalhado
+ *
+ * Retorna:
+ * {
+ *   "nomeCurso": "indisponível"
+ * }
  */
 @RestController
 @RequestMapping("/api/disciplinas")
@@ -56,6 +84,17 @@ public class DisciplinaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Nível 2
+     * GET /api/disciplinas/{id}/detalhado
+     */
+    @GetMapping("/{id}/detalhado")
+    public ResponseEntity<DisciplinaDetalhadadto> buscarDetalhado(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(service.buscarDetalhado(id));
+    }
+
     @GetMapping("/nome/{nome}")
     public List<Disciplina> listarPorNome(@PathVariable String nome) {
         return service.listarPorNome(nome);
@@ -68,8 +107,10 @@ public class DisciplinaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Disciplina> atualizar(@PathVariable Long id,
-                                                @RequestBody Disciplina disciplina) {
+    public ResponseEntity<Disciplina> atualizar(
+            @PathVariable Long id,
+            @RequestBody Disciplina disciplina) {
+
         try {
             return ResponseEntity.ok(service.atualizar(id, disciplina));
         } catch (RuntimeException e) {
@@ -79,6 +120,7 @@ public class DisciplinaController {
 
     @PatchMapping("/{id}/desativar")
     public ResponseEntity<Void> desativar(@PathVariable Long id) {
+
         try {
             service.desativar(id);
             return ResponseEntity.noContent().build();

@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.exemplo.disciplinaservice.client.Cursoclient;
+import com.exemplo.disciplinaservice.dto.Cursodto;
+import com.exemplo.disciplinaservice.dto.DisciplinaDetalhadadto;
 import com.exemplo.disciplinaservice.model.Disciplina;
 import com.exemplo.disciplinaservice.repository.DisciplinaRepository;
 
@@ -16,9 +19,14 @@ import com.exemplo.disciplinaservice.repository.DisciplinaRepository;
 public class DisciplinaService {
 
     private final DisciplinaRepository repository;
+    private final Cursoclient cursoclient;
 
-    public DisciplinaService(DisciplinaRepository repository) {
+    public DisciplinaService(
+            DisciplinaRepository repository,
+            Cursoclient cursoclient) {
+
         this.repository = repository;
+        this.cursoclient = cursoclient;
     }
 
     /** Lista todas as disciplinas */
@@ -43,10 +51,13 @@ public class DisciplinaService {
 
     /** Atualiza uma disciplina existente */
     public Disciplina atualizar(Long id, Disciplina dados) {
+
         Disciplina existente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada: " + id));
+                .orElseThrow(() ->
+                        new RuntimeException("Disciplina não encontrada"));
 
         existente.setNome(dados.getNome());
+        existente.setCursoId(dados.getCursoId());
         existente.setAtivo(dados.isAtivo());
 
         return repository.save(existente);
@@ -54,8 +65,10 @@ public class DisciplinaService {
 
     /** Desativa uma disciplina (soft delete) */
     public void desativar(Long id) {
+
         Disciplina existente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disciplina não encontrada: " + id));
+                .orElseThrow(() ->
+                        new RuntimeException("Disciplina não encontrada"));
 
         existente.setAtivo(false);
 
@@ -65,5 +78,32 @@ public class DisciplinaService {
     /** Remove permanentemente uma disciplina */
     public void excluir(Long id) {
         repository.deleteById(id);
+    }
+
+    /**
+     * Nível 2 — Comunicação entre Microserviços
+     * GET /api/disciplinas/{id}/detalhado
+     */
+    public DisciplinaDetalhadadto buscarDetalhado(Long id) {
+
+        Disciplina disciplina = repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Disciplina não encontrada"));
+
+        Cursodto curso =
+                cursoclient.buscarCurso(disciplina.getCursoId());
+
+        DisciplinaDetalhadadto dto =
+                new DisciplinaDetalhadadto();
+
+        dto.setId(disciplina.getId());
+        dto.setNome(disciplina.getNome());
+
+        dto.setCursoId(disciplina.getCursoId());
+        dto.setNomeCurso(curso.getNome());
+
+        dto.setAtivo(disciplina.isAtivo());
+
+        return dto;
     }
 }

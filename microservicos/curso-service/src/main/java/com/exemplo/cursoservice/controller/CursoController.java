@@ -16,19 +16,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exemplo.cursoservice.dto.CursoDetalhadadto;
 import com.exemplo.cursoservice.model.Curso;
 import com.exemplo.cursoservice.service.CursoService;
 
 /**
  * Controller REST — curso-service
- * Base URL: http://localhost:8083/api/cursos
  *
- *   GET    /api/cursos           — lista todos
- *   GET    /api/cursos/{id}      — busca por ID
- *   POST   /api/cursos           — cria novo (201)
- *   PUT    /api/cursos/{id}      — atualiza
- *   PATCH  /api/cursos/{id}/desativar — soft delete
- *   DELETE /api/cursos/{id}      — remove permanente
+ * Base URL:
+ * http://localhost:8083/api/cursos
+ *
+ * Endpoints CRUD:
+ * GET    /api/cursos
+ * GET    /api/cursos/{id}
+ * POST   /api/cursos
+ * PUT    /api/cursos/{id}
+ * PATCH  /api/cursos/{id}/desativar
+ * DELETE /api/cursos/{id}
+ *
+ * Nível 2 — Comunicação entre microserviços
+ * URL:
+ *
+ * GET http://localhost:8083/api/cursos/1/detalhado
+ *
+ * Nível 3.1 — Handler Global de Erros
+ * Exemplo:
+ * GET http://localhost:8083/api/cursos/999/detalhado
+ *
+ * Retorno:
+ * {
+ *   "status": 400,
+ *   "mensagem": "Curso não encontrado",
+ *   "timestamp": "2026-06-01T10:00:00"
+ * }
+ *
+ * Nível 3.2 — Fallback
+ * Se professor-service estiver indisponível:
+ *
+ * GET http://localhost:8083/api/cursos/1/detalhado
+ *
+ * Retorna:
+ * {
+ *   "nomeProfessor": "indisponível"
+ * }
  */
 @RestController
 @RequestMapping("/api/cursos")
@@ -53,6 +83,17 @@ public class CursoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Nível 2
+     * GET /api/cursos/{id}/detalhado
+     */
+    @GetMapping("/{id}/detalhado")
+    public ResponseEntity<CursoDetalhadadto> buscarDetalhado(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(service.buscarDetalhado(id));
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Curso criar(@RequestBody Curso curso) {
@@ -60,7 +101,10 @@ public class CursoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Curso> atualizar(@PathVariable Long id, @RequestBody Curso curso) {
+    public ResponseEntity<Curso> atualizar(
+            @PathVariable Long id,
+            @RequestBody Curso curso) {
+
         try {
             return ResponseEntity.ok(service.atualizar(id, curso));
         } catch (RuntimeException e) {
@@ -70,6 +114,7 @@ public class CursoController {
 
     @PatchMapping("/{id}/desativar")
     public ResponseEntity<Void> desativar(@PathVariable Long id) {
+
         try {
             service.desativar(id);
             return ResponseEntity.noContent().build();
