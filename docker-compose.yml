@@ -1,29 +1,42 @@
 services:
-  # Backend - Spring Boot
-  app:
-    build:
-      context: ./backend
-    container_name: crud-springboot
+
+  matricula-service:
+    build: ./microservicos/matricula-service
     ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb+srv://usuariodobanco:senha@cluster0.datgvgs.mongodb.net/nomedobanco?retryWrites=true&w=majority
+      - "8081:8081"
 
-    networks:
-      - app-network
+  avaliacao-service:
+    build: ./microservicos/avaliacao-service
+    ports:
+      - "8082:8082"
 
-  # Frontend - Angular com Nginx configurado para redirecionar /api para o backend
+  curso-service:
+    build: ./microservicos/curso-service
+    ports:
+      - "8083:8083"
+
+  disciplina-service:
+    build: ./microservicos/disciplina-service
+    ports:
+      - "8084:8084"
+
+  pessoa-service:
+    build: ./microservicos/pessoa-service
+    ports:
+      - "8085:8085"
+
+  professor-service:
+    build: ./microservicos/professor-service
+    ports:
+      - "8086:8086"
+
+  turma-service:
+    build: ./microservicos/turma-service
+    ports:
+      - "8087:8087"
+
   frontend:
     build:
       context: ./frontend
-    container_name: angular-app
     ports:
       - "4200:80"
-    depends_on:
-      - app
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
