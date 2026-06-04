@@ -1,0 +1,14 @@
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\client\Disciplinaclient.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\model\Avaliacao.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\controller\AvaliacaoController.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\exception\GlobalExceptionHandler.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\AvaliacaoServiceApplication.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\client\Pessoaclient.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\config\RestTemplateConfig.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\dto\Pessoadto.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\repository\AvaliacaoRepository.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\dto\Disciplinadto.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\config\AvaliacaoDataLoader.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\service\AvaliacaoService.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\dto\AvaliacaoDetalhadadto.java
+C:\Users\amanc\Trabalhogit\crudfullstackSpring\microservicos\avaliacao-service\src\main\java\com\exemplo\avaliacaoservice\exception\ErroResponse.java
